@@ -3,11 +3,10 @@
     'name': "manbike81",
 
     'summary': """
-        Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.openerp.com""",
+        Modulo creado para llevar las bicicletas de un usuario""",
 
     'description': """
-        Long description of module's purpose
+        Modulo creado para llevar las bicicletas de un usuario el cual nos ha sido pedido para la practica
     """,
 
     'author': "Alex Valdepeñas Andujar",
