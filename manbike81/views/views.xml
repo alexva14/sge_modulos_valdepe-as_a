@@ -1,28 +1,252 @@
 <odoo>
   <data>
     <!-- explicit list view definition -->
-<!--
-    <record model="ir.ui.view" id="manbike81.list">
-      <field name="name">manbike81 list</field>
-      <field name="model">manbike81.manbike81</field>
+
+    <record model="ir.ui.view" id="manbike81.bicycle_list">
+      <field name="name">manbike81.bicycle list</field>
+      <field name="model">manbike81.bicycle</field>
       <field name="arch" type="xml">
-        <tree>
+        <tree decoration-info="precio>=3000" default_order="precio desc" decoration-success="wheel=='tipo29'">
           <field name="name"/>
-          <field name="value"/>
-          <field name="value2"/>
+          <field name="description"/>
+          <field name="precio" widget="monetary" sum="Total"/>
+          <field name="wheel"/>
+          <field name="speed" optional="hidden"/>
+          <field name="manufacturer" optional="hidden"/>
+          <field name="delivery"/>
+          <!--sequence la flecha para mover registros-->
         </tree>
       </field>
     </record>
--->
+
+    <record model="ir.ui.view" id="manbike81.bicycle_calendar">
+      <field name="name">manbike81.bicycle calendar</field>
+      <field name="model">manbike81.bicycle</field>
+      <field name="arch" type="xml">
+        
+            <calendar string="" date_start="inShop" color="end_date">
+              <field name="name" />
+            </calendar>
+          
+      </field>
+    </record>
+
+
+    <record model="ir.ui.view" id="manbike81.manufacturer_list">
+      <field name="name">manbike81.manufacturer list</field>
+      <field name="model">manbike81.manufacturer</field>
+      <field name="arch" type="xml">
+        <tree> 
+          <field name="name"/>
+          <field name="web"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="manbike81.trader_list">
+      <field name="name">manbike81.trader list</field>
+      <field name="model">manbike81.trader</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="phone"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="manbike81.delivery_list">
+      <field name="name">manbike81.delivery list</field>
+      <field name="model">manbike81.delivery</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="price"/>
+          <field name="shipment_days"/>
+        </tree>
+      </field>
+    </record>
+
+
+<!--
+    <record model="ir.ui.view" id="manbike81.bicycle_kanban">
+      <field name="name">manbike81.bicycle kanban</field>
+      <field name="model">manbike81.bicycle</field>
+      <field name="arch" type="xml">
+        <kanban>
+          <field name="id"/>
+          <field name="name"/>
+          <field name="manufacturer"/>
+          <template>
+            <t t-name="kanban-box">
+              <div class="oe_kanban_global_click">
+                <div class="oe_kanban_details">
+                  <h4>
+                    <strong><field name="name"/></strong>
+                    <t t-if="record.manufacturer.value">
+                      <field name="manufacturer" />
+                    </t>
+                  </h4>
+                </div>
+              </div>
+            </t>
+          </template>
+        </kanban>
+      </field>
+    </record>-->
+
+    <record model="ir.ui.view" id="manbike81.bicycle_kanban">
+      <field name="name">manbike81.bicycle kanban</field>
+      <field name="model">manbike81.bicycle</field>
+      <field name="arch" type="xml">
+          <kanban string="Kanban bicycle" default_group_by="manufacturer">
+              <field name="id" /> <!-- Es importante añadir el id para poder usarlo a continuación -->
+              <field name="name" />
+              <field name="photo" />
+              <field name="manufacturer" />
+              <field name="trader" />
+              <templates>
+                  <t t-name="kanban-box">
+                  <div t-attf-class="oe_kanban_color_{{kanban_getcolor(record.manufacturer.raw_value)}} o_kanban_record_has_image_fill oe_kanban_global_click" >
+                      <div class="o_kanban_image">
+                          <img 
+                              t-att-alt="record.name.value"
+                              t-att-src="kanban_image('manbike81.bicycle', 'photo', record.id.raw_value)"
+                              class="o_image_64_contain"
+                          />
+                      </div>
+                      <div class="oe_kanban_details">
+                            <h4><strong>
+                                <field name="name"/>
+                            </strong>
+                            <t t-if="record.manufacturer.value">[<field name="manufacturer"/>]</t>
+                            </h4>
+                          <div name="bicycle_precio" class="mt-1">
+                              Precio: <field name="precio" widget="monetary"/>
+                          </div>
+                          <div>
+                            <ul>
+                              <li>
+                                <field name="trader" />
+                              </li>
+                            </ul>
+                          </div>
+                      </div>
+                     </div>
+                  </t>
+              </templates>
+          </kanban>
+      </field>
+    </record>
+
+<!--
+    <record model="ir.ui.view" id="manbike81.bicycle_search">
+      <field name="name">manbike81.bicycle search</field>
+      <field name="model">manbike81.bicycle</field>
+      <field name="arch" type="xml">
+        <search string="Search Bicycle">
+          <field name="name"/>
+          <field name="manufacturer"/>
+          <field name="trader"/>
+        </search>
+      </field>
+    </record>-->
+
+    <record model="ir.ui.view" id="manbike81.bicycle_search">
+      <field name="name">manbike81.bicycle search</field>
+      <field name="model">manbike81.bicycle</field>
+      <field name="arch" type="xml">
+        <search string="Search Bycicle">
+          <field name="name" />
+          <field name="description" string="Name and description" filter_domain="['|', ('name', 'ilike', self), ('description', 'ilike', self)]"/>
+          <field name="manufacturer" />
+          <field name="trader" />
+          <field name="speed" string="Speed" filter_domain="[('speed', '>=', self)]" />
+
+          <filter name="chainring" string="Number of chainring" domain="[('chainring','=',1)]"/>
+          <filter name="today" string="In shop today" domain="[('inShop', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),('inShop', '&lt;=', datetime.datetime.now().strftime('%Y-%m-%d 23:23:59'))]"/>
+          <filter name="group_by_manufacturer" string="Manufacturer" context="{'group_by': 'manufacturer'}"/>
+        </search>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="manbike81.bicycle_form">
+      <field name="name">manbike81.bicycle form</field>
+      <field name="model">manbike81.bicycle</field>
+      <field name="arch" type="xml">
+        <form>
+          <sheet>
+            <div class="oe_button_box" attrs="{'invisible':[('discount','=',True)]}">
+              <button type="object" clss="oe_stat_button" name="calc_discount" icon="fa-percent">
+                Discount
+              </button>
+            </div>
+            <group string="Informacion Principal">
+              <field name="name"/>
+              <field name="description"/>
+              <field name="manufacturer"/>
+              <field name="precio"/>
+              <field name="wheel"/>
+              <field name="discount" class="oe_read_only"/>
+              <field name="delivery"/>
+            </group>
+            <group >
+              <group string="Fechas">
+                <field name="inShop" />
+                <field name="year" />
+                <field name="end_date" />
+              </group>
+              <group string="Mas detalles">
+                <field name="chainring" />
+                <field name="cassette" />
+                <field name="speed" />
+                <field name="single_chainring" />
+              </group>
+            </group>
+            <div style="text-align: center">
+              <field name="photo" widget="image"/>
+            </div>
+            <notebook>
+              <page string="Comerciales">
+                <field name="trader">
+                  <tree>
+                    <field name="name" />
+                  </tree>
+                </field>
+              </page>
+            </notebook>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
 
     <!-- actions opening views on models -->
-<!--
-    <record model="ir.actions.act_window" id="manbike81.action_window">
-      <field name="name">manbike81 window</field>
-      <field name="res_model">manbike81.manbike81</field>
+
+    <record model="ir.actions.act_window" id="manbike81.action_bicycle_window">
+      <field name="name">manbike81 bicycle window</field>
+      <field name="res_model">manbike81.bicycle</field>
+      <field name="view_mode">tree,form,kanban,calendar</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="manbike81.action_manufacturer_window">
+      <field name="name">manbike81 manufacturer window</field>
+      <field name="res_model">manbike81.manufacturer</field>
       <field name="view_mode">tree,form</field>
     </record>
--->
+
+    <record model="ir.actions.act_window" id="manbike81.action_trader_window">
+      <field name="name">manbike81 trader window</field>
+      <field name="res_model">manbike81.trader</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="manbike81.action_delivery_window">
+      <field name="name">manbike81 delivery window</field>
+      <field name="res_model">manbike81.delivery</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+
 
     <!-- server action to the one above -->
 <!--
@@ -41,20 +265,32 @@
 -->
 
     <!-- Top menu item -->
-<!--
+
     <menuitem name="manbike81" id="manbike81.menu_root"/>
--->
+
     <!-- menu categories -->
-<!--
-    <menuitem name="Menu 1" id="manbike81.menu_1" parent="manbike81.menu_root"/>
-    <menuitem name="Menu 2" id="manbike81.menu_2" parent="manbike81.menu_root"/>
--->
+
+    <menuitem name="Management" id="manbike81.menu_man" parent="manbike81.menu_root"/>
+
+    <!--
+    <menuitem name="Menu 2" id="manbike81.menu_2" parent="manbike81.menu_root"/>-->
+
     <!-- actions -->
-<!--
-    <menuitem name="List" id="manbike81.menu_1_list" parent="manbike81.menu_1"
-              action="manbike81.action_window"/>
-    <menuitem name="Server to list" id="manbike81" parent="manbike81.menu_2"
-              action="manbike81.action_server"/>
--->
+
+    <menuitem name="Bicycle" id="manbike81.menu_bicycle_list" parent="manbike81.menu_man"
+              action="manbike81.action_bicycle_window"/>
+    <menuitem name="Manufacturer" id="manbike81.menu_manufacturer_list" parent="manbike81.menu_man"
+    action="manbike81.action_manufacturer_window"/>
+
+    <menuitem name="Trader" id="manbike81.menu_trader_list" parent="manbike81.menu_man"
+    action="manbike81.action_trader_window"/>
+
+    <menuitem name="Delivery" id="manbike81.menu_delivery_list" parent="manbike81.menu_man"
+    action="manbike81.action_delivery_window"/>
+
+
+    <!--<menuitem name="Server to list" id="manbike81" parent="manbike81.menu_2"
+              action="manbike81.action_server"/>-->
+
   </data>
 </odoo>

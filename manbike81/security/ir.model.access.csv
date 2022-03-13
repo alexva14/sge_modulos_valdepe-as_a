@@ -1,2 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_manbike81_manbike81,manbike81.manbike81,model_manbike81_manbike81,base.group_user,1,1,1,1
+access_manbike81_bicycle,manbike81.bicycle,model_manbike81_bicycle,base.group_user,1,1,1,1
+access_manbike81_manufacturer,manbike81.manufacturer,model_manbike81_manufacturer,base.group_user,1,1,1,1
+access_manbike81_trader,manbike81.trader,model_manbike81_trader,base.group_user,1,1,1,1
+access_manbike81_delivery,manbike81.delivery,model_manbike81_delivery,base.group_user,1,1,1,1
